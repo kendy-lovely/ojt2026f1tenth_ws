@@ -128,12 +128,12 @@ def generate_launch_description():
     # PENTING: Print untuk debug
     print(f"Loading controller params from: {controller_params_file}")
     
-    controller_manager = Node(
-        package='controller_manager',
-        executable='ros2_control_node',
-        parameters=[controller_params_file],  # ← Harus di sini!
-        output='screen'
-    )
+    # controller_manager = Node(
+    #     package='controller_manager',
+    #     executable='ros2_control_node',
+    #     parameters=[controller_params_file],  # ← Harus di sini!
+    #     output='screen'
+    # )
 
     cmd_vel_relay = Node(
         package='topic_tools',
@@ -179,7 +179,7 @@ def generate_launch_description():
         odom_to_tf_bridge,
         gz_spawn_entity,
         gazebo_bridge,
-        controller_manager,
+        # controller_manager,
         load_joint_state_broadcaster,
         load_f1tenth_controller,
         rviz_node,

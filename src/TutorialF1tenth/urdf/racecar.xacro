@@ -94,13 +94,13 @@
     </visual>
   </link>
 
-  <joint name="left_steering_hinge_joint" type="revolute">
-    <origin xyz="0.325 0.1 0" rpy="0 1.5708 0" />
-    <parent link="chassis" />
-    <child link="left_steering_hinge" />
-    <axis xyz="-1 0 0" />
-    <limit lower="-1.0" upper="1.0" effort="10" velocity="100" />
-  </joint>
+  <joint name="left_steering_hinge_joint" type="continuous">                                                                                          
+       <origin xyz="0.325 0.1 0" rpy="0 0 0" />  <!-- Removed the 90° Y rotation -->                                                                   
+       <parent link="chassis" />                                                                                                                       
+       <child link="left_steering_hinge" />                                                                                                            
+       <axis xyz="0 0 1" />  <!-- Now rotates around Z-axis (vertical) -->                                                                             
+       <limit lower="-1.0" upper="1.0" effort="10" velocity="100" />                                                                                   
+  </joint>   
 
   <xacro:steering_hinge_transmission name="left_steering_hinge" />
 
@@ -116,13 +116,13 @@
     </visual>
   </link>
 
-  <joint name="right_steering_hinge_joint" type="continuous">
-    <origin xyz="0.325 -0.1 0" rpy="0 1.5708 0" />
-    <parent link="chassis" />
-    <child link="right_steering_hinge" />
-    <axis xyz="-1 0 0" />
-    <limit lower="-1.0" upper="1.0" effort="10" velocity="100" />
-  </joint>
+  <joint name="right_steering_hinge_joint" type="continuous">                                                                                         
+       <origin xyz="0.325 -0.1 0" rpy="0 0 0" />  <!-- Removed the 90° Y rotation -->                                                                  
+       <parent link="chassis" />                                                                                                                       
+       <child link="right_steering_hinge" />                                                                                                           
+       <axis xyz="0 0 1" />  <!-- Now rotates around Z-axis (vertical) -->                                                                             
+       <limit lower="-1.0" upper="1.0" effort="10" velocity="100" />                                                                                   
+  </joint>  
 
   <xacro:steering_hinge_transmission name="right_steering_hinge" />
 
@@ -141,7 +141,7 @@
     </collision>
   </link>
 
-  <joint name="left_front_wheel_joint" type="fixed">
+  <joint name="left_front_wheel_joint" type="continuous">
     <origin xyz="0 0 0" rpy="1.5708 0 0" />
     <parent link="left_steering_hinge" />
     <child link="left_front_wheel" />
@@ -165,7 +165,7 @@
     </collision>
   </link>
 
-  <joint name="right_front_wheel_joint" type="fixed">
+  <joint name="right_front_wheel_joint" type="continuous">
     <origin xyz="0 0 0" rpy="1.5708 0 0" />
     <parent link="right_steering_hinge" />
     <child link="right_front_wheel" />
