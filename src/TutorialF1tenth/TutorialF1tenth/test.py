@@ -51,14 +51,14 @@ class ObjectChaser(Node):
             if scan[i] - scan[i + 1] > 6:
                 print(f"dispartity at {i}:{scan[i]}/{i+1}:{scan[i+1]}")
                 reference = scan[i + 1]
-                for j in range(30):
+                for j in range(20):
                     if i - j < 0:
                         break
                     scan[i - j] = reference
             elif scan[i] - scan[i + 1] < -6:
                 print(f"dispartity at {i}:{scan[i]}/{i+1}:{scan[i+1]}")
                 reference = scan[i]
-                for j in range(30):
+                for j in range(20):
                     if i + j == len(scan):
                         break
                     scan[i + j] = reference
@@ -77,14 +77,14 @@ class ObjectChaser(Node):
         degree = len(ranges) // 270
         maxindex = list(ranges).index(max(ranges))
 
-        factor = 1
+        factor = 2
         twist.angular.z = (-1.0 + maxindex/(len(ranges) / 2.0)) * factor
 
         if self.go_backwards:
-            twist.linear.x = -2.0
+            twist.linear.x = -4.0
             twist.angular.z = 0.0
         else:
-            twist.linear.x = 2.0 - abs(twist.angular.z / factor)
+            twist.linear.x = (2.0 - abs(twist.angular.z / factor)) * factor
 
         front_range = 3;
         front = min(ranges[len(ranges)//2 - front_range:len(ranges)//2 + front_range])

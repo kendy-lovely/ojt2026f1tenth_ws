@@ -173,6 +173,30 @@
     <limit effort="10" velocity="100"/>
   </joint>
 
+ <link name="contact">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.05 0.05 0.1"/>
+          </geometry>
+          <!--let's add color to our link-->
+          <material name="grey" />
+      </visual>
+      <collision name="collision">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.05 0.05 0.05"/>
+          </geometry>
+      </collision>
+  </link>
+
+  <joint name="contact_joint" type="fixed">
+    <origin xyz="0.375 0.0 0.025" rpy="0 0 0"/>
+    <parent link="chassis" />
+    <child link="contact" />
+    <axis xyz="0 0 0" />
+  </joint>
+
 
   <!-- Add Hokuyo laser scanner -->
 
@@ -263,6 +287,8 @@
     <child link="zed_camera_right_link"/>
     <axis xyz="0 0 1" />
   </joint>
+
+
 
   <!-- Add the remaining xacros -->
 
