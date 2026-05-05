@@ -43,64 +43,58 @@ class ObjectChaser(Node):
     def modify_scan(self, msg):
         scan = np.array(msg.ranges)
 
+        for s in scan:
+            if s == float('inf') or np.isinf(s):
+                s = 50.0
+
         for i in range(len(scan) - 1):
-            if scan[i] == float('inf') or np.isinf(scan[i]):
-                scan[i] = 50.0
-            if scan[i] - scan[i + 1] > 10.0:
+            if scan[i] - scan[i + 1] > 6:
+                print(f"dispartity at {i}:{scan[i]}/{i+1}:{scan[i+1]}")
                 reference = scan[i + 1]
-                for j in range(15):
-                    if j == len(scan):
-                        break
-                    scan[i + j] = reference
-            elif scan[i] - scan[i + 1] < -10.0:
-                reference = scan[i]
-                for j in range(15):
-                    if j == len(scan):
+                for j in range(30):
+                    if i - j < 0:
                         break
                     scan[i - j] = reference
+            elif scan[i] - scan[i + 1] < -6:
+                print(f"dispartity at {i}:{scan[i]}/{i+1}:{scan[i+1]}")
+                reference = scan[i]
+                for j in range(30):
+                    if i + j == len(scan):
+                        break
+                    scan[i + j] = reference
         
         new_scan = LaserScan()
-        new_scan.header = msg.header
-        new_scan.angle_min = msg.angle_min
-        new_scan.angle_max = msg.angle_max
-        new_scan.angle_increment = msg.angle_increment
-        new_scan.time_increment = msg.time_increment
-        new_scan.scan_time = msg.scan_time
-        new_scan.range_min = msg.range_min
-        new_scan.range_max = msg.range_max
+        new_scan = msg
         new_scan.ranges = scan.tolist()
         self.modified_scan.publish(new_scan)
-        print("published !")
         return scan               
-        
 
     def scan_callback(self, msg):
         twist = Twist()
         ranges = self.modify_scan(msg)
 
         mid = len(ranges) // 2;
-        degree = len(ranges) // 270 
+        degree = len(ranges) // 270
         maxindex = list(ranges).index(max(ranges))
 
         factor = 1
-
         twist.angular.z = (-1.0 + maxindex/(len(ranges) / 2.0)) * factor
 
         if self.go_backwards:
             twist.linear.x = -2.0
             twist.angular.z = 0.0
         else:
-            twist.linear.x = 2.0
+            twist.linear.x = 2.0 - abs(twist.angular.z / factor)
 
-        front = min(ranges[len(ranges)//5:len(ranges)//3])
+        front_range = 3;
+        front = min(ranges[len(ranges)//2 - front_range:len(ranges)//2 + front_range])
         if front < 0.8:
             self.go_backwards = True
         elif front > 2:
             self.go_backwards = False
         
-        print(maxindex)
+        print(f"max: {maxindex}")
         print(twist.angular.z)
-        print(twist.linear.x)
         print(self.go_backwards)
 
         self.publishTwist.publish(twist)
